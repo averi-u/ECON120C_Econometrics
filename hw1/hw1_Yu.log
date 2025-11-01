@@ -1,0 +1,140 @@
+-----------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/zhizhenyu/code/ECON120C-WI25/hw1/hw1_Yu.log
+  log type:  text
+ opened on:  17 Feb 2025, 23:01:16
+
+. 
+. *********************************************
+. *Econ 120C, WI25
+. *Source Code for HW1
+. *Name:  Zhizhen Yu
+. *Email: zhy008@ucsd.edu
+. *PID: A16498056
+. *********************************************
+. 
+. set obs 1000
+Number of observations (_N) was 0, now 1,000.
+
+. 
+. set seed 8056                           /*set seed using the last 4 d
+> igits of your student ID */
+
+. 
+. gen U =  runiform(-1, 1)                                /* generate a
+> n uniform between -1 and 1 */
+
+. gen V =  runiform(-1, 1)                                /* generat an
+>  uniform between -1 and 1 */
+
+. 
+. gen P = 3 + (U - V) / 4                  /* write down solution P in 
+> terms of u and v */
+
+. gen Q = 8 + (U + 3*V) / 4                        /* write down soluti
+> on Q in terms of u and v */
+
+. 
+. sum P Q
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+           P |      1,000    2.999269    .2056848    2.53198   3.493161
+           Q |      1,000    8.013566    .4454353    7.04934   8.995337
+
+. 
+. /* compute covariances between P and u, and P and v. Confirm that the
+> y have the 
+> expected sign. */
+. 
+. corr P U, covariance
+(obs=1,000)
+
+             |        P        U
+-------------+------------------
+           P |  .042306
+           U |  .086099  .334248
+
+
+. corr P V, covariance
+(obs=1,000)
+
+             |        P        V
+-------------+------------------
+           P |  .042306
+           V | -.083126  .322359
+
+
+. 
+. /* Generate the true lines for demand and supply (when supply and dem
+> and 
+> shifters are at their mean).  */
+. 
+. gen Demand = 17 - 3*P
+
+. gen Supply = 5+P
+
+. 
+. /* Create a graph where you plot the data (scatter) the fitted line (
+> lfit), and
+> the true supply and demand functions you generated above. */
+.  
+. twoway (scatter Q P) (line Demand P)  (line Supply P) (lfit Q P)
+
+. 
+. /* Now regress Quantity on Price, using robust standard errors. */
+. 
+. reg Q P,r
+
+Linear regression                               Number of obs     =    
+>   1,000
+                                                F(1, 998)         =    
+>  596.18
+                                                Prob > F          =    
+>  0.0000
+                                                R-squared         =    
+>  0.1985
+                                                Root MSE          =    
+>  .39898
+
+-----------------------------------------------------------------------
+> -------
+             |               Robust
+           Q | Coefficient  std. err.      t    P>|t|     [95% conf. in
+> terval]
+-------------+---------------------------------------------------------
+> -------
+           P |  -.9648722   .0395167   -24.42   0.000    -1.042417   -.
+> 8873269
+       _cons |   10.90748   .1190097    91.65   0.000     10.67394    1
+> 1.14102
+-----------------------------------------------------------------------
+> -------
+
+. 
+. /* Test the null hypotesis that the slope coefficient equals the true
+>  demand 
+> curve slope and the null hypohtesis that it equals the true supply sl
+> ope.*/
+. 
+. test P = -3
+
+ ( 1)  P = -3
+
+       F(  1,   998) = 2652.30
+            Prob > F =    0.0000
+
+. test P = +1
+
+ ( 1)  P = 1
+
+       F(  1,   998) = 2472.34
+            Prob > F =    0.0000
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/zhizhenyu/code/ECON120C-WI25/hw1/hw1_Yu.log
+  log type:  text
+ closed on:  17 Feb 2025, 23:01:16
+-----------------------------------------------------------------------
